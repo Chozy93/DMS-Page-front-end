@@ -99,10 +99,17 @@ const routes = [
     name: 'qna-detail',
     component: () => import('../components/qna/QnaDetail.vue')
   },
+  // fileDb
   {
     path: '/fileDb',
     name: 'fileDb',
     component: () => import('../components/fileDb/FileDbUpload.vue')
+  },
+// Gallery
+  {
+    path: '/gallery',
+    name: 'gallery',
+    component: () => import('../components/gallery/galleryUpload.vue')
   }
 ]
 

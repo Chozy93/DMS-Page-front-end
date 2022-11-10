@@ -86,7 +86,12 @@
 
         <!-- 대메뉴 #6 : FiledDb Upload -->
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/fileDb">FileDb Upload</a>
+          <router-link class="nav-link" aria-current="page" to="/fileDb">FileDb Upload</router-link>
+        </li>
+
+        <!-- 대메뉴 #7 : FiledDb Upload -->
+        <li class="nav-item">
+          <router-link to="/gallery" class="nav-link" aria-current="page">Gallery</router-link>
         </li>
       </div>
     </nav>

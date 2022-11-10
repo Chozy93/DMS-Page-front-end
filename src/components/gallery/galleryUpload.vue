@@ -60,33 +60,20 @@
       </div>
     </div>
 
-    <!-- 이미지명(fileTitle) 입력박스 시작 -->
+    <!-- 이미지명(galleryTitle) 입력박스 시작 -->
     <div class="mb-3 col-md-5">
-      <label for="fileTitle" class="form-label">이미지명</label>
+      <label for="galleryTitle" class="form-label">이미지명</label>
       <input
         type="text"
         class="form-control"
-        id="fileTitle"
+        id="galleryTitle"
         required
-        name="fileTitle"
-        v-model="fileTitle"
+        name="galleryTitle"
+        v-model="galleryTitle"
+        
       />
     </div>
-    <!-- 이미지명(fileTitle) 입력박스 끝 -->
-
-    <!-- 이미지 내용 입력 박스 시작 -->
-    <div class="mb-3 col-md-5">
-      <label for="fileContent" class="form-label">내용</label>
-      <input
-        type="text"
-        class="form-control"
-        id="fileContent"
-        required
-        name="fileContent"
-        v-model="fileContent"
-      />
-    </div>
-    <!-- 이미지 내용 입력 박스 끝 -->
+    <!-- 이미지명(galleryTitle) 입력박스 끝 -->
 
     <!-- 이미지 선택상자 시작 -->
     <div class="mb-3 col-md-5">
@@ -127,15 +114,12 @@
     <!-- 쇼핑 카트 형태 디자인 시작 -->
     <!-- v-for 시작 -->
     <div class="row">
-      <div class="col-sm-4" v-for="(data, index) in fileDb" :key="index">
+      <div class="col-sm-4" v-for="(data, index) in gallery" :key="index">
         <div class="card">
-          <img :src="data.fileUrl" class="card-img-top" alt="강의" />
+          <img :src="data.galleryUrl" class="card-img-top" alt="강의" />
           <div class="card-body">
-            <h5 class="card-title">{{ data.fileTitle }}</h5>
-            <p class="card-text">
-              {{ data.fileContent }}
-            </p>
-            <a @click="deleteImage(data.fid)">
+            <h5 class="card-title">{{ data.galleryTitle }}</h5>
+            <a @click="deleteImage(data.gid)">
               <i class="fas fa-trash" />
               <button class="badge bg-danger">Delete</button>
             </a>
@@ -148,7 +132,7 @@
 </template>
 
 <script>
-import FileDbDataService from "../../services/FileDbDataService";
+import galleryDataService from "../../services/GalleryDataService";
 export default {
   data() {
     return {
@@ -156,12 +140,11 @@ export default {
       previewImage: undefined,
       message: "", //서버에서 날아올 메세지를 저장할 변수
       
-      fileDb: [],
+      gallery: [],
       searchTitle: "",
-      fileTitle: "",
-      fileContent: "",
-      fid: null,
-      fileUrl: "",
+      galleryTitle: "",
+      gid: null,
+      galleryUrl: "",
 
       page: 1, // 현재 페이지
       count: 0, // 전체 데이터 건수
@@ -171,13 +154,13 @@ export default {
   },
   methods: {
     retrieveFileDb() {
-      FileDbDataService.getFiles(this.searchTitle, this.page-1, this.pageSize)
+      galleryDataService.getFiles(this.searchTitle, this.page-1, this.pageSize)
         // 성공하면 .then() 결과가 전송됨
         .then((response) => {
           // this.dept = response.data ->(변경) const { dept, totalItems } = response.data
           // let(const) {속성명, 속성명2} = 데이터객체배열 (모던자바문법 구조분해할당)
-         const { fileDb, totalItems } = response.data; // springboot 의 전송된 맵 정보
-         this.fileDb = fileDb;        // 스프링부트에서 전송한 데이터
+         const { gallery, totalItems } = response.data; // springboot 의 전송된 맵 정보
+         this.gallery = gallery;        // 스프링부트에서 전송한 데이터
          this.count = totalItems; // 스프링부트에서 전송한 페이지정보(총 건수)
 
           // 디버깅 콘솔에 정보 출력
@@ -194,19 +177,19 @@ export default {
         this.message="";
     },
     upload(){
-        FileDbDataService.upload(this.fileTitle,this.fileContent,this.currentImage)
+        galleryDataService.upload(this.galleryTitle,this.currentImage)
         .then((response)=>{
             this.message = response.data.message;
             //화면에 재조회 요청
-            return FileDbDataService.getFiles(
+            return galleryDataService.getFiles(
                 this.searchTitle,
                 this.page -1,
                 this.pageSize
             );
         })
         .then((response2)=>{
-            const{fileDb,totalItems} = response2.data;
-            this.fileDb =fileDb;
+            const{gallery,totalItems} = response2.data;
+            this.gallery =gallery;
             this.count=totalItems;
             this.previewImage= undefined;
             console.log(response2);
@@ -228,9 +211,9 @@ export default {
       // 재조회 함수 호출
       this.retrieveFileDb();
     },
-    deleteImage(fid){
+    deleteImage(gid){
       // axios 공통함수 호출
-      FileDbDataService.delete(fid)
+      galleryDataService.delete(gid)
       // 성공하면 then() 결과가 전송됨
       .then(response => {
         console.log(response.data);
